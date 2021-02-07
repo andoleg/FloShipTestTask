@@ -19,10 +19,11 @@ from rest_framework import routers
 from storeapp import views
 
 router = routers.DefaultRouter()
-router.register(r'orders', views.OrderViewSet)
+router.register(r"orders", views.OrderViewSet)
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include(router.urls)),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    path("admin/", admin.site.urls),
+    path("jet/", include("jet.urls", "jet")),
+    path("", include(router.urls)),
+    path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
 ]

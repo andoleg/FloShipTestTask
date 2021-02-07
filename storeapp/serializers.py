@@ -1,26 +1,30 @@
 from rest_framework import serializers
-from core.serializers import BaseOrderSerializer, BaseNodeSerializer
+from core.serializers import BaseOrderSerializer
+from core.serializers.base import BaseCreateOrderSerializer
 from storeapp.models import Order, Warehouse
-
-
-class WarehouseSerializer(BaseNodeSerializer):
-    class Meta(BaseNodeSerializer.Meta):
-        model = Warehouse
-        fields = BaseNodeSerializer.Meta.fields + ['active']
-    active = serializers.BooleanField()
 
 
 class OrderSerializer(BaseOrderSerializer):
     class Meta(BaseOrderSerializer.Meta):
         model = Order
-        fields = BaseOrderSerializer.Meta.fields  # + ['warehouse_id']
-    #
-    # warehouse_id = serializers.PrimaryKeyRelatedField(queryset=Warehouse.objects.all())
-    #
-    # def create(self, validated_data):
-    #     validated_data['warehouse'] = validated_data.pop('warehouse_id')
-    #     return super().create(validated_data)
-    #
-    # def update(self, instance, validated_data):
-    #     validated_data['warehouse'] = validated_data.pop('warehouse_id')
-    #     return super().update(instance, validated_data)
+
+    token = serializers.ReadOnlyField(source="warehouse.client_token")
+
+
+class CreateOrderSerializer(BaseCreateOrderSerializer):
+    class Meta(BaseCreateOrderSerializer.Meta):
+        model = Order
+
+    def validate_token(self, token):
+        if not Warehouse.objects.filter(server_token=token).exists():
+            raise serializers.ValidationError("Invalid token")
+        return token
+
+    def create(self, validated_data):
+        token = validated_data.pop("token")
+        validated_data["warehouse"] = Warehouse.objects.get(server_token=token)
+        return super().create(validated_data)
+
+    def update(self, instance, validated_data):
+        token = validated_data.pop("token")
+        return super().update(instance, validated_data)

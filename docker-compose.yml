@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  store_db:
+    image: mdillon/postgis:11-alpine
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: store_backend
+      POSTGRES_DB: store_backend
+      POSTGRES_PASSWORD: store_backend
+
+  warehouse_db:
+    image: mdillon/postgis:11-alpine
+    ports:
+      - 5431:5432
+    environment:
+      POSTGRES_USER: warehouse_backend
+      POSTGRES_DB: warehouse_backend
+      POSTGRES_PASSWORD: warehouse_backend
+
+
+  rabbitmq:
+    image: rabbitmq:3.7.15-alpine
+    ports:
+      - 5672:5672

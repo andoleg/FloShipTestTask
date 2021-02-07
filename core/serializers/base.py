@@ -6,8 +6,9 @@ class DynamicFieldsModelSerializer(serializers.ModelSerializer):
     A ModelSerializer that takes an additional `fields` argument that
     controls which fields should be displayed.
     """
+
     def __init__(self, *args, **kwargs):
-        fields = kwargs.pop('fields', None)
+        fields = kwargs.pop("fields", None)
         super(DynamicFieldsModelSerializer, self).__init__(*args, **kwargs)
         if fields is not None:
             allowed = set(fields)
@@ -16,11 +17,13 @@ class DynamicFieldsModelSerializer(serializers.ModelSerializer):
                 self.fields.pop(field_name)
 
 
-class BaseOrderSerializer(DynamicFieldsModelSerializer):
+class BaseOrderSerializer(serializers.ModelSerializer):
     class Meta:
-        fields = ['name', 'status']
+        fields = ("number", "status", "token")
 
 
-class BaseNodeSerializer(DynamicFieldsModelSerializer):
+class BaseCreateOrderSerializer(serializers.ModelSerializer):
     class Meta:
-        fields = ['ip_address', 'name', 'token']
+        fields = ("number", "status", "token")
+
+    token = serializers.CharField(required=True)

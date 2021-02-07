@@ -1,14 +1,8 @@
-from rest_framework import viewsets
-from rest_framework import mixins
-
+from core.views.order import BaseOrderViewSet
 from storeapp.models import Order
-from storeapp.serializers import OrderSerializer
+from storeapp.serializers import CreateOrderSerializer
 
 
-class OrderViewSet(mixins.UpdateModelMixin,
-                   mixins.CreateModelMixin,
-                   viewsets.GenericViewSet):
+class OrderViewSet(BaseOrderViewSet):
     queryset = Order.objects.all()
-    serializer_class = OrderSerializer
-
-
+    serializer_class = CreateOrderSerializer
