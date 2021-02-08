@@ -60,6 +60,16 @@
 6. Запуск `celery`
 
        $ celery -A core.celery_app worker -l info
+       
+7. Создание суперюзера для каждого сервера
+
+       $ python manage.py createsuperuser --email admin@example.com --username admin
+       
+8. После запуска двух серверов, необходимо внутри их админок создать обьекты Warehouse и Store
+
+   8.1. IP в формате `http://127.0.0.1:port`
+   
+   8.2. При создании обьекта Warehouse/Store автоматически генерируется сервер токен. Его нужно указать в поле "Client token" у всех соответсвующих клиентов. И наоборот "Server token" клиента передать серверу.
 
 
        
